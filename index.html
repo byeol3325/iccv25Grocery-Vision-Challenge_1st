@@ -1,11 +1,800 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>ICCV 2025 workshop Grocery-Vision Challenge 1st </title>
-  </head>
-  <body>
-    <h1>vv</h1>
-    <p></p>
-  </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery Shopping Cart Action Recognition Challenge - 1st Place Solution</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: #2c3e50;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        /* Header Section */
+        .header {
+            position: relative;
+            background: #ffffff;
+            padding: 4rem 0 5rem 0;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+            margin-bottom: 4rem;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+        
+        .header-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.20;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            z-index: 1;
+        }
+        
+        .header .container {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .header-content {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-title {
+            margin-bottom: 0.5rem;
+        }
+        .header-subtitle {
+            margin-bottom: 1rem;
+        }
+        
+        .authors-section {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0.8rem 0;
+        }
+        
+        .authors-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .side-logos {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 200px;
+            height: 120px;
+            object-fit: contain;
+        }
+        
+        .logo-left {
+            left: 0;
+        }
+        
+        .logo-right {
+            right: 0;
+        }
+        
+        .achievement-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+        
+        .achievement-section .achievement {
+            flex: 0 0 auto;
+            margin: 0;
+        }
+        
+        .header-logo {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        .header h1 {
+            font-family: 'Source Serif Pro', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0;
+            line-height: 1.2;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(255, 255, 255, 0.9);
+            max-width: 800px;
+        }
+
+        .header .subtitle {
+            font-size: 1.4rem;
+            color: #495057;
+            margin: 0;
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.5px;
+        }
+
+        .header .achievement {
+            display: inline-block;
+            background: linear-gradient(45deg, #ffeb3b, #fff176, #ffee58, #ffeb3b);
+            background-size: 300% 300%;
+            animation: goldShine 3s ease-in-out infinite;
+            color: #1a1a1a;
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            box-shadow: 0 6px 20px rgba(255, 235, 59, 0.6), 0 3px 10px rgba(0,0,0,0.15);
+            border: 2px solid #ffeb3b;
+            transform: translateY(-2px);
+            transition: transform 0.3s ease;
+        }
+        
+        .header .achievement:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(255, 235, 59, 0.7), 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .authors {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 0.8rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .institutions {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 0.5rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .author-link {
+            color: #0056b3;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+        
+        .author-link:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        /* Content Sections */
+        .section {
+            background: #f5f5f5;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        /* Emphasis styles */
+        .highlight {
+            color: #007bff;
+            font-weight: 700;
+        }
+        
+        .gold-highlight {
+            background: linear-gradient(45deg, #ffeb3b, #fff176, #ffee58, #ffeb3b);
+            background-size: 200% 200%;
+            animation: goldShine 2s ease-in-out infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 235, 59, 0.6);
+        }
+        
+        @keyframes goldShine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Fallback for browsers that don't support background-clip: text */
+        @supports not (-webkit-background-clip: text) {
+            .gold-highlight {
+                color: #ffeb3b;
+                background: none;
+                text-shadow: 0 0 10px rgba(255, 235, 59, 0.9), 0 0 20px rgba(255, 235, 59, 0.5);
+            }
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section h2 {
+            font-family: 'Source Serif Pro', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #1a1a1a;
+            text-align: center;
+        }
+
+        .section h3 {
+            font-family: 'Source Serif Pro', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin: 2.5rem 0 1.5rem 0;
+            color: #2c3e50;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: #495057;
+            text-align: justify;
+        }
+
+        .highlight-box {
+            background: #ffffff;
+            border-left: 4px solid #007bff;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .performance-highlight {
+            background: #ffffff;
+            border-left: 4px solid #28a745;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .performance-highlight h4 {
+            color: #155724;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+
+        /* Video Gallery */
+        .video-gallery {
+            margin: 3rem 0;
+        }
+
+        .video-item {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 3rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .video-item video {
+            width: 100%;
+            height: 500px;
+            object-fit: contain;
+            background: #000;
+        }
+
+        .video-item .video-info {
+            padding: 2rem;
+        }
+
+        .video-item h4 {
+            font-family: 'Source Serif Pro', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .video-item p {
+            font-size: 1rem;
+            color: #6c757d;
+            margin: 0;
+            text-align: justify;
+        }
+
+        /* Action Types */
+        .action-types {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .action-type {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .action-type h4 {
+            font-size: 1.1rem;
+            margin: 0;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .action-type p {
+            font-size: 0.95rem;
+            color: #6c757d;
+            margin: 0;
+        }
+
+        /* Technical Specs */
+        .tech-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .tech-spec {
+            background: #ffffff;
+            padding: 2rem;
+            border-left: 4px solid #007bff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .tech-spec h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .tech-spec ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tech-spec li {
+            padding: 0.7rem 0;
+            border-bottom: 1px solid #dee2e6;
+            color: #495057;
+            font-size: 0.95rem;
+        }
+
+        .tech-spec li:last-child {
+            border-bottom: none;
+        }
+
+        /* Pipeline Visualization */
+        .pipeline {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .pipeline h4 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .pipeline-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .pipeline-step {
+            text-align: center;
+            flex: 1;
+            min-width: 140px;
+            max-width: 180px;
+        }
+
+        .pipeline-step h5 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .pipeline-step p {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin: 0;
+            line-height: 1.3;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+
+        .pipeline-arrow {
+            font-size: 1.5rem;
+            color: #6c757d;
+        }
+
+        /* Footer */
+        .footer {
+            background: #ffffff;
+            padding: 4rem 0;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+            margin-top: 3rem;
+        }
+
+        .github-link {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .github-link:hover {
+            background: #0056b3;
+            color: white;
+            text-decoration: none;
+        }
+
+        .paper-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .paper-notice h4 {
+            color: #856404;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .paper-notice p {
+            color: #856404;
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section {
+                padding: 2rem 0;
+            }
+            
+            .pipeline-steps {
+                flex-direction: column;
+            }
+            
+            .pipeline-arrow {
+                transform: rotate(90deg);
+            }
+            
+            .action-types {
+                grid-template-columns: 1fr;
+            }
+            
+            .tech-specs {
+                grid-template-columns: 1fr;
+            }
+            
+            .video-item video {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <video autoplay muted loop class="header-video">
+            <source src="./videos/Smoother shopping is rolling your way_ The Amazon Dash Cart.mp4#t=4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="header-overlay"></div>
+        
+        <div class="container">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>Grocery Shopping Cart Action Recognition Challenge</h1>
+                </div>
+                
+                <div class="authors-section">
+                    <img src="imgs/amazon_logo.png" alt="Amazon Logo" class="side-logos logo-left">
+                    
+                    <div class="authors-content">
+                        <div class="authors">
+                            <a href="https://byeol3325.github.io/" class="author-link">Sungho Moon<sup>*</sup></a>
+                            <a href="https://seung-hun-lee.github.io/" class="author-link">Seung-Hun Lee<sup>*</sup></a>
+                            <a href="https://cvlab.dgist.ac.kr/members/hyogyeong-jeon/" class="author-link">Hyogyeong Jeon</a>
+                        </div>
+                        <div class="institutions">
+                            <a href="https://cvlab.dgist.ac.kr/" class="author-link">DGIST CVLab</a>
+                        </div>
+                    </div>
+                    
+                    <img src="imgs/iccv_2025_banner.png" alt="ICCV 2025 Banner" class="side-logos logo-right">
+                </div>
+                
+                <div class="header-subtitle">
+                    <p class="subtitle">ICCV 2025 Workshop - Amazon Sponsored Challenge</p>
+                </div>
+                
+                <div class="achievement-section">
+                    <div class="achievement">1st Place Winner</div>
+                </div>
+                
+                <p style="color: #495057; font-size: 1.1rem; margin-top: 0.8rem; font-weight: 500; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);"> Deep Learning Research Solution 🏆</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Abstract -->
+        <section class="section">
+            <h2>Abstract</h2>
+            <p>We present a novel multi-modal fusion architecture that achieved <span class="gold-highlight">first place</span> in both Temporal Action Localization (TAL) and Spatio-Temporal Action Localization (STAL) tracks of the <span class="highlight">Amazon-sponsored Grocery Shopping Cart Action Recognition Challenge at ICCV 2025 Workshop</span>. Our approach demonstrates significant performance improvements over existing methods through intelligent integration of temporal and spatial understanding for grocery shopping behavior analysis.</p>
+            
+            <div class="performance-highlight">
+                <h4>Performance Achievement</h4>
+                <p>Our solution achieved approximately <span class="highlight">2x performance improvement</span> over the second-place solution across all evaluation metrics. Detailed performance results remain confidential as per challenge organizer requirements, but will be disclosed upon official publication of challenge results.</p>
+            </div>
+        </section>
+
+        <!-- Demonstration Videos -->
+        <section class="section">
+            <h2>Demonstration Videos</h2>
+            <p>The following videos demonstrate our <span class="gold-highlight">winning solution's performance</span> on representative test sequences from the challenge dataset. Each video shows ground truth annotations, TAL predictions, STAL predictions, and final fusion results for individual video examples.</p>
+            
+            <div class="video-gallery">
+                <div class="video-item">
+                    <video controls>
+                        <source src="./videos/video_00004_github_visualization.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="video-info">
+                        <h4>Video Example 1</h4>
+                        <p>Visualization of ground truth annotations alongside our TAL, STAL, and final fusion predictions on a representative test sequence.</p>
+                    </div>
+                </div>
+                
+                <div class="video-item">
+                    <video controls>
+                        <source src="./videos/video_00013_github_visualization.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="video-info">
+                        <h4>Video Example 2</h4>
+                        <p>Visualization of ground truth annotations alongside our TAL, STAL, and final fusion predictions on a representative test sequence.</p>
+                    </div>
+                </div>
+                
+                <div class="video-item">
+                    <video controls>
+                        <source src="./videos/video_00075_github_visualization.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="video-info">
+                        <h4>Video Example 3</h4>
+                        <p>Visualization of ground truth annotations alongside our TAL, STAL, and final fusion predictions on a representative test sequence.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem Definition -->
+        <section class="section">
+            <h2>Problem Definition</h2>
+            <p>The <span class="highlight">Grocery Shopping Cart Action Recognition Challenge</span> focuses on the <span class="highlight">automated detection and localization of customer behaviors</span> in retail environments. This task is critical for understanding consumer shopping patterns, inventory management, and loss prevention in modern retail systems.</p>
+            
+            <h3>Target Action Categories</h3>
+            <div class="action-types">
+                <div class="action-type">
+                    <h4>Take</h4>
+                </div>
+                <div class="action-type">
+                    <h4>Return</h4>
+                </div>
+                <div class="action-type">
+                    <h4>Rummage</h4>
+                </div>
+            </div>
+            
+            <p>The challenge requires both <span class="highlight">temporal action localization</span> (identifying when actions occur) and <span class="highlight">spatio-temporal action localization</span> (identifying when and where actions occur with precise object-level annotations).</p>
+        </section>
+
+        <!-- Methodology -->
+        <section class="section">
+            <h2>Methodology</h2>
+            <p>Our <span class="gold-highlight">winning approach</span> employs a novel multi-modal fusion architecture that combines temporal action localization with spatio-temporal object detection. The system architecture consists of three main components working in synergy to achieve superior performance.</p>
+            
+            <div class="pipeline">
+                <h4>System Architecture Pipeline</h4>
+                <div class="pipeline-steps">
+                    <div class="pipeline-step">
+                        <h5>Input Processing</h5>
+                        <p>Video sequence preprocessing and feature extraction</p>
+                    </div>
+                    <div class="pipeline-arrow">→</div>
+                    <div class="pipeline-step">
+                        <h5>TAL Module</h5>
+                        <p>Multi-configuration temporal localization</p>
+                    </div>
+                    <div class="pipeline-arrow">→</div>
+                    <div class="pipeline-step">
+                        <h5>STAL Module</h5>
+                        <p>Object detection and tracking with multi-modal fusion</p>
+                    </div>
+                    <div class="pipeline-arrow">→</div>
+                    <div class="pipeline-step">
+                        <h5>Fusion Engine</h5>
+                        <p>integration and refinement in TAL & STAL predictions </p>
+                    </div>
+                    <div class="pipeline-arrow">→</div>
+                    <div class="pipeline-step">
+                        <h5>Output</h5>
+                        <p>Final predictions of TAL & STAL </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-specs">
+                <div class="tech-spec">
+                    <h4>Temporal Action Localization (TAL)</h4>
+                    <ul>
+                        <li>Based on OpenTAD (CausalTAD, AdaTAD)</li>
+                        <li>Multi-scale temporal feature extraction</li>
+                        <li>Precise action boundary detection</li>
+                        <li>Confidence-based prediction aggregation</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-spec">
+                    <h4>Spatio-Temporal Action Localization (STAL)</h4>
+                    <ul>
+                        <li>GLEE-based object detection framework</li>
+                        <li>SAM2 integration for precise segmentation</li>
+                        <li>Temporal consistency through object tracking</li>
+                        <li>Action-object association mechanisms</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results and Discussion -->
+        <section class="section">
+            <h2>Results and Discussion</h2>
+            <p>Our solution <span class="gold-highlight">ranked first overall</span>—surpassing every submission in the challenge's history—and <span class="gold-highlight">won both the TAL and STAL tracks</span>. The multi-modal fusion design was particularly effective in tackling occlusions, rapid movements, and complex object interactions.</p>
+            
+            <div class="performance-highlight">
+                <h4>Competitive Performance Analysis</h4>
+                <p>Our method achieved approximately <span class="highlight">2x performance improvement</span> over the second-place solution across all evaluation metrics including mean Average Precision (mAP) at various IoU thresholds. The TAL configurations provided robust predictions, while the STAL component ensured precise spatial localization.</p>
+            </div>
+        </section>
+        
+        <!-- Publication and Code -->
+        <section class="section">
+            <h2>Publication & Code</h2>
+            
+            <div class="paper-notice">
+                <h4>Upcoming Publication</h4>
+                <p>A comprehensive technical paper detailing our methodology, experimental results, and algorithmic innovations will be submitted for publication in the coming months. The paper will provide in-depth analysis of our multi-modal fusion approach and comparative studies with existing methods.</p>
+            </div>
+            
+            <h3>Code Availability</h3>
+            <p>The complete implementation of our <span class="gold-highlight">winning solution</span>, including model configurations, training scripts, and inference pipelines, is currently under preparation for public release. The codebase will be made available alongside the publication and will provide comprehensive documentation for reproducing our results and adapting the approach to new datasets.</p>
+            
+            <div class="highlight-box">
+                <p><span class="highlight">Repository Contents (Coming Soon):</span> The repository will include pre-trained models, configuration files, evaluation scripts, and detailed setup instructions for both TAL and STAL components. All dependencies and system requirements will be clearly documented to ensure reproducible results.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p style="margin-bottom: 2rem; color: #6c757d;">For detailed implementation, setup instructions, and code access:</p>
+            <a href="https://github.com/byeol3325" class="github-link">
+                <i class="fab fa-github"></i> View Implementation on GitHub
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add loading states for videos
+        document.querySelectorAll('video').forEach(video => {
+            video.addEventListener('loadstart', function() {
+                this.style.opacity = '0.7';
+            });
+            
+            video.addEventListener('loadeddata', function() {
+                this.style.opacity = '1';
+            });
+        });
+    </script>
+</body>
 </html>

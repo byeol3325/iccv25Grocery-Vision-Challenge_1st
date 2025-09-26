@@ -326,6 +326,25 @@
             object-fit: contain;
             background: #000;
         }
+        
+        .video-fallback {
+            width: 100%;
+            height: 500px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #dee2e6;
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+        
+        .video-fallback i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #007bff;
+        }
 
         .video-item .video-info {
             padding: 2rem;
@@ -619,7 +638,7 @@
             
             <div class="video-gallery">
                 <div class="video-item">
-                    <video controls>
+                    <video controls preload="metadata" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100%25' height='100%25' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23fff'%3ELoading...%3C/text%3E%3C/svg%3E">
                         <source src="./videos/video_00004_github_visualization.mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
@@ -630,7 +649,7 @@
                 </div>
                 
                 <div class="video-item">
-                    <video controls>
+                    <video controls preload="metadata" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100%25' height='100%25' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23fff'%3ELoading...%3C/text%3E%3C/svg%3E">
                         <source src="./videos/video_00013_github_visualization.mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
@@ -641,7 +660,7 @@
                 </div>
                 
                 <div class="video-item">
-                    <video controls>
+                    <video controls preload="metadata" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100%25' height='100%25' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23fff'%3ELoading...%3C/text%3E%3C/svg%3E">
                         <source src="./videos/video_00075_github_visualization.mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
@@ -785,14 +804,59 @@
             });
         });
 
-        // Add loading states for videos
+        // Enhanced video loading and error handling
         document.querySelectorAll('video').forEach(video => {
+            // Skip the header video (autoplay video)
+            if (video.classList.contains('header-video')) return;
+            
             video.addEventListener('loadstart', function() {
                 this.style.opacity = '0.7';
+                console.log('Video loading started:', this.src);
+            });
+            
+            video.addEventListener('loadedmetadata', function() {
+                this.style.opacity = '0.9';
+                console.log('Video metadata loaded:', this.src);
             });
             
             video.addEventListener('loadeddata', function() {
                 this.style.opacity = '1';
+                console.log('Video data loaded:', this.src);
+            });
+            
+            video.addEventListener('canplay', function() {
+                this.style.opacity = '1';
+                console.log('Video can play:', this.src);
+            });
+            
+            video.addEventListener('error', function(e) {
+                console.error('Video error:', this.src, e);
+                this.style.display = 'none';
+                
+                const fallback = document.createElement('div');
+                fallback.className = 'video-fallback';
+                fallback.innerHTML = `
+                    <i class="fas fa-video-slash"></i>
+                    <div>Video temporarily unavailable</div>
+                    <div style="font-size: 0.9rem; margin-top: 0.5rem;">
+                        Large video files are being optimized for GitHub Pages
+                    </div>
+                    <div style="font-size: 0.8rem; margin-top: 1rem; color: #007bff;">
+                        <a href="${this.querySelector('source').src}" target="_blank" style="color: #007bff; text-decoration: none;">
+                            <i class="fas fa-download"></i> Download Video
+                        </a>
+                    </div>
+                `;
+                
+                this.parentNode.insertBefore(fallback, this);
+            });
+            
+            video.addEventListener('stalled', function() {
+                console.warn('Video stalled:', this.src);
+            });
+            
+            video.addEventListener('waiting', function() {
+                console.log('Video waiting for data:', this.src);
             });
         });
     </script>

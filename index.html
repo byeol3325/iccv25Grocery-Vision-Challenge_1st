@@ -16,13 +16,12 @@
         body {
             font-family: 'Inter', sans-serif;
             line-height: 1.7;
-            color: #2c3e50;
             background: #f5f5f5;
             min-height: 100vh;
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 30px;
         }
@@ -214,10 +213,12 @@
 
         /* Content Sections */
         .section {
-            background: #f5f5f5;
-            padding: 3rem 0;
+            background: #ffffff;
+            padding: 3rem 4rem;
             margin-bottom: 2rem;
-            border-bottom: 1px solid #e9ecef;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-bottom: none;
         }
         
         /* Emphasis styles */
@@ -581,9 +582,132 @@
                 height: 300px;
             }
         }
+
+        /* Dark Mode Styles */
+        .dark-mode {
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        .dark-mode .section {
+            background: #2c2c2c;
+            border-color: #444;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        .dark-mode .header-overlay {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .dark-mode .header h1,
+        .dark-mode .section h2,
+        .dark-mode .section h3,
+        .dark-mode .video-item h4,
+        .dark-mode .tech-spec h4,
+        .dark-mode .pipeline h4,
+        .dark-mode .paper-notice h4,
+        .dark-mode .performance-highlight h4 {
+            color: #f5f5f5;
+        }
+        
+        .dark-mode .header h1 {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .dark-mode .header .subtitle,
+        .dark-mode .section p,
+        .dark-mode .video-item p,
+        .dark-mode .tech-spec li,
+        .dark-mode .pipeline-step p,
+        .dark-mode .footer p,
+        .dark-mode .author-link {
+            color: #b0b0b0;
+            text-shadow: none;
+        }
+
+        .dark-mode .author-link:hover {
+            color: #4da6ff;
+        }
+
+        .dark-mode .github-link {
+            background: #0056b3;
+        }
+
+        .dark-mode .github-link:hover {
+            background: #004494;
+        }
+
+        .dark-mode .paper-notice {
+            background: #444;
+            border-color: #555;
+        }
+
+        .dark-mode .paper-notice h4,
+        .dark-mode .paper-notice p {
+            color: #f5f5f5;
+        }
+
+        .dark-mode .header .achievement {
+            color: #1a1a1a; /* Keep text dark for gold background */
+        }
+
+        /* Dark Mode Toggle Switch */
+        .theme-switch-wrapper {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .theme-switch {
+            display: inline-block;
+            height: 34px;
+            position: relative;
+            width: 60px;
+        }
+
+        .theme-switch input { display: none; }
+
+        .slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            background-color: #fff;
+            bottom: 4px;
+            content: "";
+            height: 26px;
+            left: 4px;
+            position: absolute;
+            transition: .4s;
+            width: 26px;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #007bff;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
     </style>
 </head>
 <body>
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" />
+            <div class="slider round"></div>
+        </label>
+    </div>
     <!-- Header Section -->
     <header class="header">
         <video autoplay muted loop class="header-video" playsinline>
@@ -642,7 +766,7 @@
 
         <!-- Demonstration Videos -->
         <section class="section">
-            <h2>Demonstration Videos</h2>
+            <h2>Results Visualization</h2>
             <p>The following videos demonstrate our <span class="gold-highlight">winning solution's performance</span> on representative test sequences from the challenge dataset. Each video shows ground truth annotations, TAL predictions, STAL predictions, and final fusion results for individual video examples.</p>
             
             <div class="video-gallery">
@@ -844,6 +968,38 @@
                 });
             });
         });
+
+        // Dark Mode Toggle
+        const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+        const currentTheme = localStorage.getItem('theme');
+
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        
+            if (currentTheme === 'dark') {
+                toggleSwitch.checked = true;
+                document.body.classList.add('dark-mode');
+            }
+        }
+
+        function switchTheme(e) {
+            if (e.target.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        toggleSwitch.addEventListener('change', switchTheme, false);
+
+        // Apply theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            toggleSwitch.checked = true;
+        }
     </script>
 </body>
 </html>
